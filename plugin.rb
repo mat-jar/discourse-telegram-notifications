@@ -6,7 +6,7 @@
 # authors: David Taylor
 # url: https://github.com/davidtaylorhq/discourse-telegram-notifications
 
-gem 'mime-types', '>= 3.5'
+gem 'mime-types', '3.5.1'
 
 require 'cgi'
 require 'multipart/post'
