@@ -6,16 +6,21 @@
 # authors: David Taylor
 # url: https://github.com/davidtaylorhq/discourse-telegram-notifications
 
-gem 'mime-types', '3.5.1'
-
-require 'cgi'
-require 'multipart/post'
-require 'mime/types'
-require 'mini_magick'
-
 enabled_site_setting :telegram_notifications_enabled
 
 after_initialize do
+  # Load mime-types safely
+  begin
+    require 'cgi'
+    require 'multipart/post'
+    require 'mime/types'
+    require 'mini_magick'
+  rescue LoadError
+    Rails.logger.warn(
+      'One of the gems is missing! Please add it to the main Gemfile and rebuild Docker.'
+    )
+  end
+
   module ::DiscourseTelegramNotifications
     PLUGIN_NAME = 'discourse_telegram_notifications'.freeze
 
