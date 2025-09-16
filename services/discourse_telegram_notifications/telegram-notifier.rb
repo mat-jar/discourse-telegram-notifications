@@ -7,8 +7,7 @@ require 'net/http/post/multipart'
 module DiscourseTelegramNotifications
   class TelegramNotifier
     def self.sendMessage(message)
-      puts "Debug: Telegram payload => #{message}"
-      Rails.logger.warn("Rails logger: #{message}")
+      Rails.logger.warn("Rails logger send Message: #{message}")
       doRequest('sendMessage', message)
     end
 

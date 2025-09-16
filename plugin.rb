@@ -9,6 +9,8 @@
 $LOAD_PATH.unshift(
   File.join(File.dirname(__FILE__), 'gems', 'gems', 'mini_magick-5.3.1', 'lib')
 )
+gem 'mime-types', '>= 3.5', require: false
+gem 'multipart-post', '>= 2.0', require: false
 
 enabled_site_setting :telegram_notifications_enabled
 
@@ -16,12 +18,30 @@ after_initialize do
   # Load mime-types safely
   begin
     require 'cgi'
+  rescue LoadError
+    Rails.logger.warn(
+      'cgi is missing! Please add it to the main Gemfile and rebuild Docker.'
+    )
+  end
+  begin
     require 'multipart/post'
+  rescue LoadError
+    Rails.logger.warn(
+      'multipart/posts is missing! Please add it to the main Gemfile and rebuild Docker.'
+    )
+  end
+  begin
     require 'mime/types'
+  rescue LoadError
+    Rails.logger.warn(
+      'mime/types is missing! Please add it to the main Gemfile and rebuild Docker.'
+    )
+  end
+  begin
     require 'mini_magick'
   rescue LoadError
     Rails.logger.warn(
-      'One of the gems is missing! Please add it to the main Gemfile and rebuild Docker.'
+      'mini_magick is missing! Please add it to the main Gemfile and rebuild Docker.'
     )
   end
 
