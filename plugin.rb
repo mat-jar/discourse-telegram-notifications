@@ -9,8 +9,18 @@
 $LOAD_PATH.unshift(
   File.join(File.dirname(__FILE__), 'gems', 'gems', 'mini_magick-5.3.1', 'lib')
 )
-gem 'mime-types', '>= 3.5', require: false
-gem 'multipart-post', '>= 2.0', require: false
+$LOAD_PATH.unshift(
+  File.join(File.dirname(__FILE__), 'gems', 'gems', 'mime-types-3.7.0', 'lib')
+)
+$LOAD_PATH.unshift(
+  File.join(
+    File.dirname(__FILE__),
+    'gems',
+    'gems',
+    'multipart-post-2.4.1',
+    'lib'
+  )
+)
 
 enabled_site_setting :telegram_notifications_enabled
 
