@@ -194,6 +194,8 @@ after_initialize do
           string
         )
 
+        Discourse.logger.info('Message', message)
+
         message = {
           chat_id: chat_id,
           message_id: params['callback_query']['message']['message_id'],
