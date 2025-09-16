@@ -282,7 +282,8 @@ after_initialize do
           ).first
 
         doc = Nokogiri.HTML(post.cooked)
-        Rails.logger.warn("doc: #{doc}")
+        Rails.logger.warn('doc', doc)
+        Rails.logger.warn('post', post.cooked)
         image_paths = []
         animation_paths = []
 
@@ -290,6 +291,7 @@ after_initialize do
           .css('img')
           .reject { |img| img['class'].to_s.include?('emoji') }
           .each do |img|
+            Rails.logger.warn('foundimage', img)
             src = img['src']
             next unless src
 
