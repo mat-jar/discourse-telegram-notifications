@@ -20,22 +20,20 @@ after_initialize do
   begin
     require 'multipart/post'
   rescue LoadError
-    Rails.logger.warn(
-      'multipart/posts is missing! Please add it to the main Gemfile and rebuild Docker.'
-    )
+    "Failed to load multipart/posts: #{e.message}\n#{e.backtrace.join("\n")}"
   end
   begin
     require 'mime/types'
   rescue LoadError
     Rails.logger.warn(
-      'mime/types is missing! Please add it to the main Gemfile and rebuild Docker.'
+      "Failed to load mime/types: #{e.message}\n#{e.backtrace.join("\n")}"
     )
   end
   begin
     require 'mini_magick'
   rescue LoadError
     Rails.logger.warn(
-      'mini_magick is missing! Please add it to the main Gemfile and rebuild Docker.'
+      "Failed to load mini_magick: #{e.message}\n#{e.backtrace.join("\n")}"
     )
   end
 
@@ -282,8 +280,8 @@ after_initialize do
           ).first
 
         doc = Nokogiri.HTML(post.cooked)
-        Rails.logger.warn('doc', doc)
-        Rails.logger.warn('post', post.cooked)
+        Rails.logger.info("post: #{post.cooked}")
+        Rails.logger.info("podoc.to_html: #{doc.to_html}")
         image_paths = []
         animation_paths = []
 
@@ -291,7 +289,7 @@ after_initialize do
           .css('img')
           .reject { |img| img['class'].to_s.include?('emoji') }
           .each do |img|
-            Rails.logger.warn('foundimage', img)
+            Rails.logger.info("foundimage: #{img}")
             src = img['src']
             next unless src
 
@@ -355,7 +353,7 @@ after_initialize do
           media = []
           files = {}
 
-          Rails.logger.warn("image_paths: #{image_paths}")
+          Rails.logger.warn("image_paths: #{image_paths.inspect}")
 
           image_paths.each_with_index do |path, i|
             if File.extname(path).downcase == '.avif'
