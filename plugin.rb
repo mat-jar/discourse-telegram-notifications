@@ -282,6 +282,7 @@ after_initialize do
           ).first
 
         doc = Nokogiri.HTML(post.cooked)
+        Rails.logger.warn("doc: #{doc}")
         image_paths = []
         animation_paths = []
 
@@ -352,6 +353,8 @@ after_initialize do
           media = []
           files = {}
 
+          Rails.logger.warn("image_paths: #{image_paths}")
+
           image_paths.each_with_index do |path, i|
             if File.extname(path).downcase == '.avif'
               begin
@@ -392,6 +395,8 @@ after_initialize do
               ).to_json
           }.merge(files)
 
+          Rails.logger.error("images_form_data: #{images_form_data}")
+
           begin
             response_media =
               DiscourseTelegramNotifications::TelegramNotifier.sendMediaGroup(
@@ -401,6 +406,8 @@ after_initialize do
             Rails.logger.error("Błąd przy response_media: #{e.message}")
           end
         end
+
+        Rails.logger.error("response_media: #{response_media}")
 
         if response_media
           response_media['result'].each do |msg|
