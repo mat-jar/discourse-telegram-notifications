@@ -7,7 +7,6 @@ require 'net/http/post/multipart'
 module DiscourseTelegramNotifications
   class TelegramNotifier
     def self.sendMessage(message)
-      Rails.logger.warn("Rails logger send Message: #{message}")
       doRequest('sendMessage', message)
     end
 

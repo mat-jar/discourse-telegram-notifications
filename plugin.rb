@@ -26,31 +26,14 @@ $LOAD_PATH.unshift(
 )
 
 after_initialize do
-  # Load mime-types safely
   begin
     require 'cgi'
-  rescue LoadError
-    Rails.logger.warn(
-      'cgi is missing! Please add it to the main Gemfile and rebuild Docker.'
-    )
-  end
-  begin
     require 'multipart/post'
-  rescue LoadError => e
-    "Failed to load multipart/posts: #{e.message}\n#{e.backtrace.join("\n")}"
-  end
-  begin
     require 'mime/types'
-  rescue LoadError => e
-    Rails.logger.warn(
-      "Failed to load mime/types: #{e.message}\n#{e.backtrace.join("\n")}"
-    )
-  end
-  begin
     require 'mini_magick'
   rescue LoadError => e
     Rails.logger.warn(
-      "Failed to load mini_magick: #{e.message}\n#{e.backtrace.join("\n")}"
+      "Failed to one of the gems in Telegram Notifications Plugin: #{e.message}\n#{e.backtrace.join("\n")}"
     )
   end
 
@@ -297,8 +280,6 @@ after_initialize do
           ).first
 
         doc = Nokogiri.HTML(post.cooked)
-        Rails.logger.info("post: #{post.cooked}")
-        Rails.logger.info("podoc.to_html: #{doc.to_html}")
         image_paths = []
         animation_paths = []
 
@@ -306,7 +287,6 @@ after_initialize do
           .css('img')
           .reject { |img| img['class'].to_s.include?('emoji') }
           .each do |img|
-            Rails.logger.info("foundimage: #{img}")
             src = img['src']
             next unless src
 
@@ -370,8 +350,6 @@ after_initialize do
           media = []
           files = {}
 
-          Rails.logger.warn("image_paths: #{image_paths.inspect}")
-
           image_paths.each_with_index do |path, i|
             if File.extname(path).downcase == '.avif'
               begin
@@ -380,9 +358,10 @@ after_initialize do
                 image.format('jpg')
                 image.write(converted_path)
                 path = converted_path
-                Rails.logger.info("Converted AVIF to JPG: #{converted_path}")
               rescue StandardError => e
-                Rails.logger.error("Błąd przy konwersji AVIF: #{e.message}")
+                Rails.logger.error(
+                  "Error while executing AVIF conversion: #{e.message}"
+                )
                 break
               end
             end
@@ -398,7 +377,7 @@ after_initialize do
               )
               media << { type: 'photo', media: "attach://#{field}" }
             rescue StandardError => e
-              Rails.logger.error("Błąd przy UploadIO: #{e.message}")
+              Rails.logger.error("Error while executing UploadIO: #{e.message}")
             end
           end
 
@@ -412,19 +391,17 @@ after_initialize do
               ).to_json
           }.merge(files)
 
-          Rails.logger.error("images_form_data: #{images_form_data}")
-
           begin
             response_media =
               DiscourseTelegramNotifications::TelegramNotifier.sendMediaGroup(
                 images_form_data
               )
           rescue StandardError => e
-            Rails.logger.error("Błąd przy response_media: #{e.message}")
+            Rails.logger.error(
+              "Error while executing sendMediaGroup: #{e.message}"
+            )
           end
         end
-
-        Rails.logger.error("response_media: #{response_media}")
 
         if response_media
           response_media['result'].each do |msg|
@@ -449,7 +426,9 @@ after_initialize do
                 File.basename(path)
               )
             rescue StandardError => e
-              Rails.logger.error("Błąd przy UploadIO animation: #{e.message}")
+              Rails.logger.error(
+                "Error while executing UploadIO animation: #{e.message}"
+              )
               next
             end
 
@@ -469,7 +448,9 @@ after_initialize do
                   animation_form_data
                 )
             rescue StandardError => e
-              Rails.logger.error("Błąd przy sendAnimation: #{e.message}")
+              Rails.logger.error(
+                "Error while executing sendAnimation : #{e.message}"
+              )
             end
 
             if response_animations_media
