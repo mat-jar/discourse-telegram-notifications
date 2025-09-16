@@ -6,9 +6,9 @@
 # authors: David Taylor
 # url: https://github.com/davidtaylorhq/discourse-telegram-notifications
 
-gem 'mini_magick'
-gem 'mime-types'
-gem 'multipart-post'
+gem 'mini_magick', '>= 4.12', require: false
+gem 'mime-types', '>= 3.5', require: false
+gem 'multipart-post', '>= 2.0', require: false
 
 enabled_site_setting :telegram_notifications_enabled
 
