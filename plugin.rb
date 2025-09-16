@@ -19,19 +19,19 @@ after_initialize do
   end
   begin
     require 'multipart/post'
-  rescue LoadError
+  rescue LoadError => e
     "Failed to load multipart/posts: #{e.message}\n#{e.backtrace.join("\n")}"
   end
   begin
     require 'mime/types'
-  rescue LoadError
+  rescue LoadError => e
     Rails.logger.warn(
       "Failed to load mime/types: #{e.message}\n#{e.backtrace.join("\n")}"
     )
   end
   begin
     require 'mini_magick'
-  rescue LoadError
+  rescue LoadError => e
     Rails.logger.warn(
       "Failed to load mini_magick: #{e.message}\n#{e.backtrace.join("\n")}"
     )
