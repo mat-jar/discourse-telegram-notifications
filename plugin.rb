@@ -194,8 +194,6 @@ after_initialize do
           string
         )
 
-        Discourse.logger.info('Message', message)
-
         message = {
           chat_id: chat_id,
           message_id: params['callback_query']['message']['message_id'],
@@ -318,6 +316,10 @@ after_initialize do
               user
             )
         }
+
+        puts "Debug: Telegram payload => #{message}"
+        Rails.logger.info("Rails logger: #{message}")
+        Discourse.logger.info('Message', message)
 
         response =
           DiscourseTelegramNotifications::TelegramNotifier.sendMessage(message)
