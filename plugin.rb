@@ -8,6 +8,13 @@
 
 enabled_site_setting :telegram_notifications_enabled
 
+$LOAD_PATH.unshift(
+  File.join(File.dirname(__FILE__), 'gems', 'gems', 'mini_magick-5.3.1', 'lib')
+)
+$LOAD_PATH.unshift(
+  File.join(File.dirname(__FILE__), 'gems', 'gems', 'mime-types-3.7.0', 'lib')
+)
+
 after_initialize do
   # Load mime-types safely
   begin
