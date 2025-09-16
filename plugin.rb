@@ -15,6 +15,16 @@ $LOAD_PATH.unshift(
   File.join(File.dirname(__FILE__), 'gems', 'gems', 'mime-types-3.7.0', 'lib')
 )
 
+$LOAD_PATH.unshift(
+  File.join(
+    File.dirname(__FILE__),
+    'gems',
+    'gems',
+    'mime-types-data-3.2025.0909',
+    'lib'
+  )
+)
+
 after_initialize do
   # Load mime-types safely
   begin
