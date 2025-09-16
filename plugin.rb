@@ -6,6 +6,10 @@
 # authors: David Taylor
 # url: https://github.com/davidtaylorhq/discourse-telegram-notifications
 
+gem 'mini_magick'
+gem 'mime-types'
+gem 'multipart-post'
+
 enabled_site_setting :telegram_notifications_enabled
 
 after_initialize do
@@ -316,10 +320,6 @@ after_initialize do
               user
             )
         }
-
-        puts "Debug: Telegram payload => #{message}"
-        Rails.logger.info("Rails logger: #{message}")
-        Discourse.logger.info('Message', message)
 
         response =
           DiscourseTelegramNotifications::TelegramNotifier.sendMessage(message)
